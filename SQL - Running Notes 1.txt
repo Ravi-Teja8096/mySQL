@@ -1,0 +1,210 @@
+SQL - Running Notes
+Lecture 01 | Date: 19 May 2026
+
+1. SQL Architecture
+Three main components:
+SQL Server - stores data and hosts databases locally. Multiple databases can be created on a single server. 
+Responsible for processing queries, managing transactions, security, and concurrency. 
+Handles backup, recovery, authentication, and performance optimization. 
+Workbench - a UI tool used to interact with the server. You create, view, and manipulate tables and data here. 
+Used for writing SQL queries, creating schemas, running scripts, and viewing outputs. 
+Examples: MySQL Workbench, SQL Server Management Studio (SSMS), pgAdmin. 
+Database - created on the server. Contains tables, views, stored procedures, and functions. 
+Databases organize related business data in a structured format. 
+Supports relationships between multiple tables using keys and constraints. 
+
+Schema
+Schema is the blueprint/structure of a table in a database. 
+Defines columns, data types, and constraints. 
+Schema also includes views, stored procedures, and functions. 
+Helps organize database objects logically. 
+Ensures consistency and proper data organization across applications. 
+
+2. SQL Command Types (5 Categories)
+
+DDL - Data Definition Language
+Used to define or modify the structure of the database. 
+Commands: CREATE, ALTER, DROP, TRUNCATE. 
+Mostly related to database object creation and schema management. 
+Changes made using DDL are generally auto-committed. 
+
+DML - Data Manipulation Language
+Used to manipulate data inside tables. 
+Commands: INSERT, UPDATE, DELETE. 
+Works on actual table data rather than structure. 
+Commonly used in transactional systems and ETL processes. 
+
+DQL - Data Query Language
+Used to retrieve/query data from tables. 
+Commands: SELECT. 
+Supports filtering, sorting, grouping, and joining data. 
+Used heavily in reporting, analytics, and dashboards. 
+
+DCL - Data Control Language
+Used to control access and permissions to database objects. 
+Commands: GRANT, REVOKE. 
+Helps secure sensitive data and manage user roles. 
+Used by database administrators for access management. 
+
+TCL - Transaction Control Language
+Used to manage transactions and maintain data integrity. 
+Commands: COMMIT, ROLLBACK, SAVEPOINT. 
+Ensures ACID properties in databases. 
+Helps prevent partial updates and maintains consistency during failures. 
+3. Constraints
+Constraints are rules applied to columns to enforce data integrity. Defined when creating or altering a table.
+Improve data quality and consistency. 
+Prevent invalid or duplicate data from entering tables. 
+Enforced automatically by the database system. 
+
+Constraint: NOT NULL
+The column cannot be empty - a value is always required when inserting a row. 
+Used for mandatory business fields like Employee ID or Email. 
+Prevents incomplete records. 
+
+Constraint: UNIQUE
+Every value in the column must be different - no duplicate values allowed. 
+Commonly applied on email, username, phone number, etc. 
+Allows NULL values depending on database type. 
+
+Constraint: PRIMARY KEY
+Uniquely identifies each row in the table. 
+Must be UNIQUE and NOT NULL. 
+Only one primary key per table. 
+Automatically creates an index in most databases. 
+Important for relationships and query optimization. 
+
+Constraint: FOREIGN KEY
+Links a column in one table to the primary key of another table. 
+Establishes a parent-child relationship between tables. 
+Enforces referential integrity - child cannot have a value that doesn't exist in the parent. 
+Prevents orphan records and invalid references. 
+
+Constraint: CHECK
+Enforces a specific condition on a column. Example: age >= 18. 
+Useful for business validations. 
+Helps maintain domain-specific data accuracy. 
+
+Constraint: DEFAULT
+Assigns a fallback value automatically if no value is provided on insert. 
+Reduces manual data entry. 
+Ensures consistency for common values. 
+
+4. Primary Key and Foreign Key Relationships
+
+Primary Key (Parent / Referenced Table)
+Uniquely identifies every record in a table. 
+Cannot be NULL or duplicated. 
+The table holding the primary key is called the parent table or referenced table. 
+Improves indexing and query performance. 
+Essential for maintaining entity integrity. 
+
+Foreign Key (Child / Referencing Table)
+A column in the child table that points to the primary key of the parent table. 
+Ensures referential integrity - no orphaned records allowed. 
+Child table cannot hold a foreign key value that does not exist in the parent table. 
+Used to establish relationships between business entities. 
+Supports normalized database design. 
+
+Cascading Behavior
+
+ON DELETE RESTRICT
+Blocks deletion of a parent row if related child records still exist. 
+Protects against broken references. 
+Maintains data consistency across related tables. 
+
+ON UPDATE CASCADE
+Automatically updates the matching foreign key values in the child table when the parent key changes. 
+Keeps data consistent. 
+Reduces manual synchronization effort. 
+
+5. DROP vs DELETE vs TRUNCATE
+All three remove data but in very different ways - important to know the difference.
+
+DROP
+Deletes the entire table including its structure/schema permanently. 
+Cannot be undone. 
+No WHERE clause - removes everything. 
+Frees storage completely. 
+Removes indexes, constraints, and permissions associated with the table. 
+
+TRUNCATE
+Removes all rows from the table but keeps the table schema/structure intact. 
+No WHERE clause - removes all rows. 
+Faster than DELETE when removing all rows. 
+Minimal logging improves performance. 
+Often resets identity/auto-increment values. 
+
+DELETE
+Removes only specific rows based on a condition (WHERE clause). 
+Keeps the table schema intact. 
+Other rows not matching the condition remain untouched. 
+Can be rolled back before COMMIT. 
+Triggers can fire during DELETE operations. 
+
+Important
+Foreign key constraints will block DROP on a parent table if child tables still reference it. 
+Always drop the child table first, then the parent. 
+Proper dependency management is important in relational databases. 
+
+6. Normalization and Denormalization
+
+Normalization
+Process of splitting data into multiple related tables to reduce redundancy. 
+Ensures data integrity - each fact is stored in only one place. 
+Primary key and foreign key relationships link the tables together. 
+Used in OLTP (transactional) systems. 
+Reduces duplicate data and update anomalies. 
+Makes insert, update, and delete operations more reliable. 
+
+Denormalization
+Combining tables for faster read/query performance. 
+Accepts some redundancy in exchange for fewer joins. 
+Used in data marts and data warehouses for analytics. 
+Improves reporting and dashboard performance. 
+Common in OLAP and BI systems. 
+
+Metadata and INFORMATION_SCHEMA
+Metadata = data about data. 
+Stored in INFORMATION_SCHEMA which is a built-in system schema. 
+Can be queried to inspect table structures, column definitions, and constraints. 
+Example: query INFORMATION_SCHEMA to see all constraints on a given table. 
+Helps developers understand database structure quickly. 
+Useful for auditing and documentation purposes. 
+
+7. Practical SQL Commands
+CREATE TABLE - create a new table with columns, data types, and constraints. 
+ALTER TABLE - add new columns or rename existing columns on an existing table. 
+INSERT INTO - insert rows into a table. Observed constraint violation errors. 
+SELECT - retrieve data from a table. 
+UPDATE - modify existing rows using SET and WHERE clause. 
+DELETE - remove specific rows using a WHERE condition. 
+DROP TABLE - remove a table completely (structure and data). 
+TRUNCATE TABLE - remove all rows but keep the table structure. 
+Foreign key with ON DELETE RESTRICT and ON UPDATE CASCADE demonstrated. 
+DEFAULT values and CHECK constraints applied to columns. 
+
+
+Additional Important SQL Commands
+CREATE DATABASE - create a new database. 
+USE DATABASE - switch to a database. 
+RENAME TABLE - rename an existing table. 
+DISTINCT - retrieve unique values. 
+ORDER BY - sort query results. 
+GROUP BY - group rows with same values. 
+HAVING - filter grouped data. 
+LIMIT / TOP - restrict number of rows returned. 
+INNER JOIN - retrieve matching rows from multiple tables. 
+LEFT JOIN - retrieve all rows from left table and matching rows from right table. 
+RIGHT JOIN - retrieve all rows from right table and matching rows from left table. 
+FULL OUTER JOIN - retrieve all matching and non-matching rows from both tables. 
+UNION - combine results from multiple SELECT statements. 
+INDEX - improve query performance. 
+VIEW - create virtual tables using queries. 
+STORED PROCEDURE - reusable SQL code block. 
+COUNT, SUM, AVG, MAX, MIN - aggregate functions used in reporting and analytics. 
+CASE WHEN - apply conditional logic inside queries. 
+EXISTS - check whether subquery returns records. 
+SUBQUERY - query written inside another query. 
+CTE (Common Table Expression) - improves query readability and modularity. 
+WINDOW FUNCTIONS - used for ranking, running totals, and analytical calculations. 
